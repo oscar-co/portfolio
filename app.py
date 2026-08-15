@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 
+from data.experience import EXPERIENCE
 from data.projects import PROJECTS
 from data.skills import TECH_AREAS
 
@@ -11,6 +12,7 @@ app = Flask(__name__)
 def home() -> str:
     return render_template(
         "index.html",
+        experience=EXPERIENCE,
         tech_areas=TECH_AREAS,
         projects=PROJECTS,
     )
