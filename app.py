@@ -8,6 +8,11 @@ from data.skills import TECH_AREAS
 app = Flask(__name__)
 
 
+@app.get("/health")
+def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
 @app.get("/")
 def home() -> str:
     return render_template(
