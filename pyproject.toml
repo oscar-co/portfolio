@@ -1,0 +1,4 @@
+[tool.mypy]
+python_version = "3.14"
+files = ["app.py", "data"]
+strict = true
