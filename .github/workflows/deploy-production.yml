@@ -44,4 +44,4 @@ jobs:
         run: |
           set -Eeuo pipefail
           ssh -i ~/.ssh/deploy_key "$VPS_USER@$VPS_HOST" \
-            "bash /opt/portfolio/deploy.sh"
+            "bash /opt/portfolio/deploy-scripts/deploy.sh"
