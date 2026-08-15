@@ -46,3 +46,6 @@ coverage.xml
 .idea/
 .DS_Store
 Thumbs.db
+
+# Notas locales de desarrollo
+TODO.md
