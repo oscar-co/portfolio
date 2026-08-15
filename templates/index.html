@@ -1,116 +1,82 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Oscar Carrero's QA automation and software development portfolio.">
-  <title>Oscar Carrero — Senior QA Automation Engineer</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/refinements.css') }}">
-</head>
-<body>
-  <div class="noise" aria-hidden="true"></div>
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Back to top">
-      <span class="brand-mark">OC</span><span class="brand-dot">.</span>
-    </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
-    <nav id="main-nav" class="main-nav" aria-label="Main navigation">
-      <a href="#about">About</a>
-      <a href="#stack">Stack</a>
-      <a href="#projects">Projects</a>
-      <a class="nav-cta" href="{{ url_for('static', filename='cv/cv_ocarrero_eng.pdf') }}" download>Download CV <span>↓</span></a>
-    </nav>
-  </header>
+{% extends "base.html" %}
 
-  <main id="top">
-    <section class="hero section-shell">
-      <p class="eyebrow">Senior QA Automation Engineer / SDET</p>
-      <h1>Reliable automation.<br><em>Better software.</em></h1>
-      <p class="hero-copy">I build maintainable test automation for web applications and APIs, working closely with development teams to find issues earlier.</p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="#projects">View projects <span>↓</span></a>
-        <a class="text-link" href="{{ url_for('static', filename='cv/cv_ocarrero_eng.pdf') }}" download>Download CV <span>↓</span></a>
-      </div>
-    </section>
-
-    <div class="ticker" aria-hidden="true">
-      <div>PLAYWRIGHT <span>✳</span> TYPESCRIPT <span>✳</span> PYTHON <span>✳</span> PYTEST <span>✳</span> API TESTING <span>✳</span> AWS <span>✳</span></div>
-      <div>PLAYWRIGHT <span>✳</span> TYPESCRIPT <span>✳</span> PYTHON <span>✳</span> PYTEST <span>✳</span> API TESTING <span>✳</span> AWS <span>✳</span></div>
+{% block content %}
+<main id="top">
+  <section class="hero section-shell">
+    <p class="eyebrow">Senior QA Automation Engineer / SDET</p>
+    <h1>Reliable automation.<br><em>Better software.</em></h1>
+    <p class="hero-copy">I build maintainable test automation for web applications and APIs, working closely with development teams to find issues earlier.</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="#projects">View projects <span>↓</span></a>
+      <a class="text-link" href="{{ url_for('static', filename='cv/cv_ocarrero_eng.pdf') }}" download>Download CV <span>↓</span></a>
     </div>
+  </section>
 
-    <section id="about" class="about section-shell reveal">
-      <div class="section-label"><span>01</span> About me</div>
-      <div class="about-grid">
-        <h2>Testing throughout<br><em>the development cycle.</em></h2>
-        <div class="about-copy">
-          <p>I am a QA Engineer specialising in automation, with experience in functional testing and building E2E frameworks.</p>
-          <p>I work closely with developers to detect problems early and create maintainable testing systems that provide useful feedback to the team.</p>
-          <div class="principles">
-            <span>01 / Find issues early</span>
-            <span>02 / Automate with purpose</span>
-            <span>03 / Keep feedback useful</span>
-          </div>
+  <div class="ticker" aria-hidden="true">
+    <div>PLAYWRIGHT <span>✳</span> TYPESCRIPT <span>✳</span> PYTHON <span>✳</span> PYTEST <span>✳</span> API TESTING <span>✳</span> AWS <span>✳</span></div>
+    <div>PLAYWRIGHT <span>✳</span> TYPESCRIPT <span>✳</span> PYTHON <span>✳</span> PYTEST <span>✳</span> API TESTING <span>✳</span> AWS <span>✳</span></div>
+  </div>
+
+  <section id="about" class="about section-shell reveal">
+    <div class="section-label"><span>01</span> About me</div>
+    <div class="about-grid">
+      <h2>Testing throughout<br><em>the development cycle.</em></h2>
+      <div class="about-copy">
+        <p>I am a QA Engineer specialising in automation, with experience in functional testing and building E2E frameworks.</p>
+        <p>I work closely with developers to detect problems early and create maintainable testing systems that provide useful feedback to the team.</p>
+        <div class="principles">
+          <span>01 / Find issues early</span>
+          <span>02 / Automate with purpose</span>
+          <span>03 / Keep feedback useful</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="stack" class="stack-section section-shell reveal">
-      <div class="section-heading">
-        <div class="section-label"><span>02</span> Technical stack</div>
-        <p>Tools I use across automation, backend testing and development.</p>
-      </div>
-      <div class="stack-grid">
-        {% for area in tech_areas %}
-        <article class="stack-card">
-          <span class="card-number">{{ area.number }}</span>
-          <div class="card-icon" aria-hidden="true">{% if loop.index == 1 %}⌁{% elif loop.index == 2 %}{ }{% elif loop.index == 3 %}△{% elif loop.index == 4 %}◎{% else %}◇{% endif %}</div>
-          <h3>{{ area.title }}</h3>
-          <p>{{ area.description }}</p>
-          <ul>
-            {% for skill in area.skills %}<li>{{ skill }}</li>{% endfor %}
-          </ul>
-        </article>
-        {% endfor %}
-      </div>
-    </section>
+  <section id="stack" class="stack-section section-shell reveal">
+    <div class="section-heading">
+      <div class="section-label"><span>02</span> Technical stack</div>
+      <p>Tools I use across automation, backend testing and development.</p>
+    </div>
+    <div class="stack-grid">
+      {% for area in tech_areas %}
+      <article class="stack-card">
+        <span class="card-number">{{ area.number }}</span>
+        <div class="card-icon" aria-hidden="true">{% if loop.index == 1 %}⌁{% elif loop.index == 2 %}{ }{% elif loop.index == 3 %}△{% elif loop.index == 4 %}◎{% else %}◇{% endif %}</div>
+        <h3>{{ area.title }}</h3>
+        <p>{{ area.description }}</p>
+        <ul>
+          {% for skill in area.skills %}<li>{{ skill }}</li>{% endfor %}
+        </ul>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
 
-    <section id="projects" class="projects-section section-shell reveal">
-      <div class="section-heading projects-heading">
-        <div>
-          <div class="section-label"><span>03</span> Selected projects</div>
-          <h2>Automation projects<br><em>and practical work.</em></h2>
+  <section id="projects" class="projects-section section-shell reveal">
+    <div class="section-heading projects-heading">
+      <div>
+        <div class="section-label"><span>03</span> Selected projects</div>
+        <h2>Automation projects<br><em>and practical work.</em></h2>
+      </div>
+      <p>Examples of testing frameworks I am building and improving.</p>
+    </div>
+    <div class="project-list">
+      {% for project in projects %}
+      <article class="project-card">
+        <div class="project-index">/{{ project.index }}</div>
+        <div class="project-main">
+          <div class="project-topline"><span>{{ project.status }}</span><span>↗</span></div>
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.subtitle }}</p>
+          <div class="project-tags">{% for item in project.stack %}<span>{{ item }}</span>{% endfor %}</div>
         </div>
-        <p>Examples of testing frameworks I am building and improving.</p>
-      </div>
-      <div class="project-list">
-        {% for project in projects %}
-        <article class="project-card">
-          <div class="project-index">/{{ project.index }}</div>
-          <div class="project-main">
-            <div class="project-topline"><span>{{ project.status }}</span><span>↗</span></div>
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.subtitle }}</p>
-            <div class="project-tags">{% for item in project.stack %}<span>{{ item }}</span>{% endfor %}</div>
-          </div>
-          <ul class="project-features">
-            {% for feature in project.features %}<li>{{ feature }}</li>{% endfor %}
-          </ul>
-        </article>
-        {% endfor %}
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="site-footer section-shell">
-    <a class="brand" href="#top"><span class="brand-mark">OC</span><span class="brand-dot">.</span></a>
-    <p>Senior QA Automation Engineer · SDET</p>
-    <p>© <span id="current-year"></span> Oscar Carrero</p>
-  </footer>
-  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-</body>
-</html>
+        <ul class="project-features">
+          {% for feature in project.features %}<li>{{ feature }}</li>{% endfor %}
+        </ul>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</main>
+{% endblock %}
