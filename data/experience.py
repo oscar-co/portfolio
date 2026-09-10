@@ -3,7 +3,18 @@ from data.models import Experience
 
 EXPERIENCE: tuple[Experience, ...] = (
     Experience(
-        period="2023 — Present",
+        period="July 2026 — Present",
+        role="Senior QA Engineer",
+        company="Legrand",
+        location="Madrid, Spain",
+        highlights=(
+            "Lead quality activities across the software delivery lifecycle, combining hands-on testing with a risk-based approach.",
+            "Design and evolve maintainable UI and API automation while integrating quality checks into CI/CD workflows.",
+            "Collaborate with development and product teams to identify risks early, investigate complex issues and improve release confidence.",
+        ),
+    ),
+    Experience(
+        period="2023 — July 2026",
         role="QA Automation Engineer",
         company="Minsait · eu-LISA",
         location="Strasbourg, France",
