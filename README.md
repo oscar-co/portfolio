@@ -26,7 +26,8 @@ La aplicación está construida con Flask y renderiza en el servidor una landing
 - Enlaces a GitHub, LinkedIn y correo electrónico.
 - Endpoint de salud en `/health`.
 - Imagen Docker preparada para ejecutarse con un usuario sin privilegios.
-- Despliegue automatizado a un VPS desde la rama `main`.
+- Integración continua para pull requests y cambios en `main`.
+- Despliegue a producción controlado mediante tags de versión.
 
 ## Estructura del proyecto
 
@@ -183,12 +184,45 @@ Las estructuras utilizadas por estos archivos están definidas en `data/models.p
 
 La imagen de producción ejecuta Gunicorn en el puerto `8000` y dispone de un `HEALTHCHECK` sobre `/health`. El contenedor se ejecuta como un usuario sin privilegios y la configuración de Compose añade un sistema de archivos de solo lectura, elimina capabilities de Linux e impide la obtención de nuevos privilegios.
 
+El workflow `.github/workflows/ci.yml` valida la aplicación en cada pull request dirigido a `main` y después de cada cambio integrado en esa rama. Estos eventos no despliegan la aplicación.
+
 El workflow `.github/workflows/deploy-production.yml`:
 
-1. Se ejecuta después de un `push` a `main` o manualmente.
-2. Construye la etapa Docker de validación.
-3. Configura el acceso SSH mediante secretos de GitHub.
-4. Ejecuta el script de despliegue configurado en el VPS.
+1. Se ejecuta exclusivamente al subir un tag con formato `vX.Y.Z`.
+2. Comprueba que el tag sea una versión semántica válida y que su commit pertenezca a `main`.
+3. Construye la etapa Docker de validación.
+4. Configura el acceso SSH mediante secretos de GitHub.
+5. Ejecuta el script de despliegue configurado en el VPS.
+
+El workflow pasa el tag al script remoto. El script valida de nuevo la versión, obtiene el commit exacto asociado al tag y comprueba que pertenezca a `main` antes de construir el contenedor. De este modo, producción no depende de cuál sea el último commit de `main` en el momento del despliegue.
+
+Para publicar una versión desde un `main` actualizado:
+
+```bash
+git switch main
+git pull --ff-only
+git tag -a v1.0.0 -m "Portfolio v1.0.0"
+git push origin v1.0.0
+```
+
+Publicar cambios o fusionar un pull request en `main` ya no provoca un despliegue. El tag debe seguir exactamente el formato `vX.Y.Z`, por ejemplo `v1.0.1` o `v1.2.0`.
+
+### Instalar el script de despliegue en el VPS
+
+El script versionado se encuentra en `deploy/deploy.sh`. Antes de publicar el primer tag, hay que copiarlo al VPS en la ruta utilizada por GitHub Actions:
+
+```bash
+sudo install -d -m 750 /opt/portfolio/deploy-scripts
+sudo install -m 750 deploy/deploy.sh /opt/portfolio/deploy-scripts/deploy.sh
+```
+
+Puede comprobarse manualmente pasando un tag que ya exista en GitHub:
+
+```bash
+bash /opt/portfolio/deploy-scripts/deploy.sh v1.0.0
+```
+
+El script rechazará ejecuciones sin versión, tags con otro formato y tags cuyos commits no estén integrados en `main`.
 
 El repositorio necesita los siguientes secretos para desplegar:
 

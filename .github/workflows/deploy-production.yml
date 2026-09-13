@@ -2,9 +2,8 @@ name: Deploy portfolio to VPS
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    tags:
+      - "v*.*.*"
 
 permissions:
   contents: read
@@ -22,6 +21,27 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Validate release tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -Eeuo pipefail
+
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "Invalid release tag: $RELEASE_TAG"
+            echo "Expected semantic version format: vX.Y.Z (for example, v1.2.0)"
+            exit 1
+          fi
+
+          git fetch --no-tags origin \
+            refs/heads/main:refs/remotes/origin/main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "The tagged commit must belong to the main branch."
+            exit 1
+          fi
 
       - name: Run checks in Docker
         run: docker build --target test --tag portfolio:test .
@@ -39,9 +59,11 @@ jobs:
 
       - name: Run deployment script on VPS
         env:
+          RELEASE_TAG: ${{ github.ref_name }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
         run: |
           set -Eeuo pipefail
+          echo "Deploying release $RELEASE_TAG"
           ssh -i ~/.ssh/deploy_key "$VPS_USER@$VPS_HOST" \
-            "bash /opt/portfolio/deploy-scripts/deploy.sh"
+            "bash /opt/portfolio/deploy-scripts/deploy.sh '$RELEASE_TAG'"
