@@ -194,6 +194,8 @@ El workflow `.github/workflows/deploy-production.yml`:
 4. Configura el acceso SSH mediante secretos de GitHub.
 5. Ejecuta el script de despliegue configurado en el VPS.
 
+El workflow pasa el tag al script remoto. El script valida de nuevo la versión, obtiene el commit exacto asociado al tag y comprueba que pertenezca a `main` antes de construir el contenedor. De este modo, producción no depende de cuál sea el último commit de `main` en el momento del despliegue.
+
 Para publicar una versión desde un `main` actualizado:
 
 ```bash
@@ -204,6 +206,23 @@ git push origin v1.0.0
 ```
 
 Publicar cambios o fusionar un pull request en `main` ya no provoca un despliegue. El tag debe seguir exactamente el formato `vX.Y.Z`, por ejemplo `v1.0.1` o `v1.2.0`.
+
+### Instalar el script de despliegue en el VPS
+
+El script versionado se encuentra en `deploy/deploy.sh`. Antes de publicar el primer tag, hay que copiarlo al VPS en la ruta utilizada por GitHub Actions:
+
+```bash
+sudo install -d -m 750 /opt/portfolio/deploy-scripts
+sudo install -m 750 deploy/deploy.sh /opt/portfolio/deploy-scripts/deploy.sh
+```
+
+Puede comprobarse manualmente pasando un tag que ya exista en GitHub:
+
+```bash
+bash /opt/portfolio/deploy-scripts/deploy.sh v1.0.0
+```
+
+El script rechazará ejecuciones sin versión, tags con otro formato y tags cuyos commits no estén integrados en `main`.
 
 El repositorio necesita los siguientes secretos para desplegar:
 

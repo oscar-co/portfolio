@@ -37,7 +37,8 @@ jobs:
             exit 1
           fi
 
-          git fetch origin main --no-tags
+          git fetch --no-tags origin \
+            refs/heads/main:refs/remotes/origin/main
           if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
             echo "The tagged commit must belong to the main branch."
             exit 1
@@ -66,4 +67,4 @@ jobs:
           set -Eeuo pipefail
           echo "Deploying release $RELEASE_TAG"
           ssh -i ~/.ssh/deploy_key "$VPS_USER@$VPS_HOST" \
-            "bash /opt/portfolio/deploy-scripts/deploy.sh"
+            "bash /opt/portfolio/deploy-scripts/deploy.sh '$RELEASE_TAG'"
