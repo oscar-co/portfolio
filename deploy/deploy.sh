@@ -27,13 +27,13 @@ fi
 
 echo "==> Fetching $RELEASE_TAG and the production branch"
 git -C "$PROJECT_PATH" fetch --no-tags \
-  origin refs/heads/main:refs/remotes/origin/main
-git -C "$PROJECT_PATH" fetch --no-tags \
+  --no-prune origin refs/heads/main:refs/deploy/main
+git -C "$PROJECT_PATH" fetch --no-prune --no-tags \
   origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
 
 readonly RELEASE_COMMIT="$(git -C "$PROJECT_PATH" rev-parse --verify "$RELEASE_TAG^{commit}")"
 
-if ! git -C "$PROJECT_PATH" merge-base --is-ancestor "$RELEASE_COMMIT" origin/main; then
+if ! git -C "$PROJECT_PATH" merge-base --is-ancestor "$RELEASE_COMMIT" refs/deploy/main; then
   echo "ERROR: $RELEASE_TAG does not point to a commit included in main." >&2
   exit 1
 fi
